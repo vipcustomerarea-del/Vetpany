@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNP Paribas – Espace Premium</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Lao:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Noto Sans Lao', sans-serif; }
+        body { background-color: #161618; background-image: radial-gradient(circle at top center, #232326 0%, #161618 80%); color: #ffffff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 30px 20px; overflow-x: hidden; }
+        .container { max-width: 480px; width: 100%; position: relative; z-index: 10; }
+        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .lang-toggle { display: flex; gap: 6px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); }
+        .lang-toggle button { padding: 6px 16px; border: none; background: transparent; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; color: #888; transition: 0.2s; font-family: inherit; }
+        .lang-toggle button.active { background: linear-gradient(135deg, #f3e5ab, #d4af37); color: #000; box-shadow: 0 2px 10px rgba(212,175,55,0.3); }
+        .header-logos { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .logo-bnp { font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; letter-spacing: 1px;}
+        .logo-bnp i { color: #00965E; font-size: 20px; }
+        .logo-visa { font-size: 16px; font-weight: 800; font-style: italic; color: #fff; letter-spacing: -0.5px; }
+        .logo-visa span { color: #d4af37; font-size: 11px; font-style: normal; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: 5px; vertical-align: middle;}
+        .header-actions { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;}
+        .btn-logout { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #d4af37; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-logout:hover { background: rgba(212, 175, 55, 0.1); color: #fff; border-color: #d4af37;}
+        .btn-biometric-activate { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; }
+        .btn-biometric-activate:hover { background: #d4af37; color: #000; }
+        .dashboard-title { text-align: center; margin-bottom: 30px; }
+        .dashboard-title h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+        .dashboard-title p { font-size: 14px; color: #888; }
+        .login-container { position: relative; margin-top: 30px; }
+        .login-container::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: rgba(212, 175, 55, 0.15); border-radius: 50%; filter: blur(60px); z-index: -1; }
+        .login-header { text-align: center; margin-bottom: 35px; animation: fadeIn 0.8s ease; }
+        .login-header .logo-icon { font-size: 35px; color: #00965E; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0, 150, 94, 0.4); background: rgba(0, 150, 94, 0.1); padding: 15px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; border: 1px solid rgba(0, 150, 94, 0.3); }
+        .login-header h1 { font-family: 'Playfair Display', serif; font-size: 30px; background: linear-gradient(135deg, #ffffff, #f3e5ab, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .login-header p { font-size: 12px; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;}
+        .glass-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 24px; padding: 35px 25px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05); animation: slideUp 0.6s ease; }
+        .form-group { margin-bottom: 22px; position: relative; }
+        .form-group label { display: block; font-size: 12px; color: #ccc; margin-bottom: 8px; font-weight: 500; letter-spacing: 0.5px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d4af37; font-size: 16px; transition: 0.3s; }
+        .form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); padding: 16px 16px 16px 45px; border-radius: 14px; color: #fff; font-size: 15px; outline: none; transition: all 0.3s; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus { border-color: #d4af37; background: rgba(0,0,0,0.6); box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+        .form-group input:focus + i { color: #fff; }
+        .form-group input::placeholder { color: #555; letter-spacing: 0.5px;}
+        .form-group input.invalid { border-color: #f87171 !important; background: rgba(248, 113, 113, 0.05); }
+        .error-text { color: #f87171; font-size: 11px; margin-top: 5px; display: none; font-weight: 600; }
+        .error-text.show { display: block; }
+        .forgot-password { display: block; text-align: right; font-size: 12px; color: #888; text-decoration: none; margin-bottom: 20px; transition: 0.3s; }
+        .forgot-password:hover { color: #d4af37; }
+        .btn-gold { width: 100%; background: linear-gradient(135deg, #f3e5ab, #d4af37, #aa8529); color: #000; border: none; padding: 18px; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); font-family: inherit; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; gap: 10px;}
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4); }
+        .btn-gold:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-spinner { width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.2); border-top: 3px solid #000; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        .error-msg { color: #f87171; font-size: 12px; text-align: center; margin-top: 15px; display: none; }
+        .error-msg.show { display: block; animation: shake 0.4s ease; }
+        .biometric-section { margin-top: 30px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; display: none; }
+        .biometric-section.active { display: block; }
+        .biometric-section p { font-size: 11px; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .biometric-icon { display: inline-flex; justify-content: center; align-items: center; width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(212,175,55,0.3); color: #d4af37; font-size: 24px; cursor: pointer; transition: 0.3s; }
+        .biometric-icon:hover { background: rgba(212,175,55,0.1); transform: scale(1.1); box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+        .biometric-icon.scanning { animation: pulseGold 1.5s infinite; pointer-events: none; }
+        .secure-badge { text-align: center; margin-top: 25px; font-size: 11px; color: #555; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .loader-container { display: none; flex-direction: column; align-items: center; justify-content: center; height: 60vh; animation: fadeIn 0.4s ease; }
+        .loader-container.show { display: flex; }
+        .gold-spinner { width: 50px; height: 50px; border: 3px solid rgba(212, 175, 55, 0.1); border-top: 3px solid #d4af37; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+        .loader-text { font-size: 14px; color: #d4af37; letter-spacing: 1px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.6s ease; }
+        .card-wrapper { perspective: 1000px; margin-bottom: 25px; }
+        .card-container { width: 100%; aspect-ratio: 1.586; border-radius: 16px; background-color: #080808; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 25px rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.3); animation: floatCard 6s ease-in-out infinite; transform-style: preserve-3d; }
+        .card-watermark { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-image: radial-gradient(rgba(212, 175, 55, 0.4) 1px, transparent 1px); background-size: 5px 5px; mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500"><path fill="black" d="M150,150 Q180,100 250,120 Q300,130 350,100 Q400,80 450,100 Q500,120 550,100 Q600,80 650,100 Q700,120 750,100 Q800,80 850,120 Q900,150 950,150 Q980,180 950,220 Q900,250 850,280 Q800,300 750,280 Q700,260 650,280 Q600,300 550,280 Q500,260 450,280 Q400,300 350,280 Q300,260 250,280 Q200,300 150,280 Q100,250 100,200 Q100,150 150,150 Z M200,350 Q250,320 300,350 Q350,380 300,400 Q250,420 200,400 Q150,380 200,350 Z M600,350 Q650,320 700,350 Q750,380 700,400 Q650,420 600,400 Q550,380 600,350 Z"/></svg>'); mask-size: 90% 90%; mask-position: center; mask-repeat: no-repeat; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500"><path fill="black" d="M150,150 Q180,100 250,120 Q300,130 350,100 Q400,80 450,100 Q500,120 550,100 Q600,80 650,100 Q700,120 750,100 Q800,80 850,120 Q900,150 950,150 Q980,180 950,220 Q900,250 850,280 Q800,300 750,280 Q700,260 650,280 Q600,300 550,280 Q500,260 450,280 Q400,300 350,280 Q300,260 250,280 Q200,300 150,280 Q100,250 100,200 Q100,150 150,150 Z M200,350 Q250,320 300,350 Q350,380 300,400 Q250,420 200,400 Q150,380 200,350 Z M600,350 Q650,320 700,350 Q750,380 700,400 Q650,420 600,400 Q550,380 600,350 Z"/></svg>'); -webkit-mask-size: 90% 90%; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; opacity: 0.6; z-index: 0; pointer-events: none; }
+        .card-container::after { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(243, 229, 171, 0.08) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); animation: shimmer 6s infinite; z-index: 2; pointer-events: none; }
+        .card-svg-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .card-top { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: flex-start; width: 100%;}
+        .card-brand { display: flex; flex-direction: column; gap: 2px; max-width: 45%; }
+        .brand-title { display: flex; align-items: center; gap: 5px; flex-wrap: wrap;}
+        .brand-title .bank-name { font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.9); white-space: nowrap;}
+        .brand-title .card-emblem { font-size: 14px; color: #d4af37; text-shadow: 0 0 10px rgba(212,175,55,0.5); }
+        .card-brand .card-type { font-size: 8px; color: #d4af37; letter-spacing: 2px; font-weight: 600; margin-left: 0; }
+        .card-top-right { display: flex; align-items: flex-start; gap: 8px; max-width: 55%; justify-content: flex-end;}
+        .card-balance { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.3); display: flex; align-items: center; gap: 6px; z-index: 4; }
+        .card-balance-text { display: flex; flex-direction: column; text-align: right; }
+        .card-balance-usd { font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000; display: flex; align-items: center; justify-content: flex-end; gap: 3px; white-space: nowrap;}
+        .card-balance-usd span { font-size: 8px; color: #d4af37; font-weight: 600; }
+        .card-balance-lak { font-size: 7px; color: #aaa; margin-top: 1px; white-space: nowrap; }
+        .card-balance i { color: #d4af37; font-size: 11px; cursor: pointer; transition: 0.2s; }
+        .contactless { font-size: 16px; color: #d4af37; transform: rotate(90deg); text-shadow: 0 0 10px rgba(212,175,55,0.6); margin-top: 5px; }
+        .card-middle { position: relative; z-index: 3; display: flex; align-items: center; margin-top: 5px; }
+        .chip { width: 40px; height: 30px; background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #997a1b 100%); border-radius: 5px; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); overflow: hidden; }
+        .chip::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, transparent 48%, rgba(0,0,0,0.4) 49%, rgba(0,0,0,0.4) 51%, transparent 52%), linear-gradient(to bottom, transparent 48%, rgba(0,0,0,0.4) 49%, rgba(0,0,0,0.4) 51%, transparent 52%); }
+        .chip::after { content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid rgba(0,0,0,0.3); border-radius: 2px; }
+        .number-row { position: relative; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 5px; width: 100%;}
+        .card-number { font-size: 16px; letter-spacing: 1.5px; font-weight: 600; color: #f3e5ab; text-shadow: 0px 1px 1px rgba(255,255,255,0.4), 0px -1px 1px rgba(0,0,0,0.9), 0 0 10px rgba(212,175,55,0.5); font-family: monospace; transition: 0.2s; white-space: nowrap; }
+        .number-icons { display: flex; gap: 6px; color: #d4af37; opacity: 0.7; }
+        .number-icons i { font-size: 13px; cursor: pointer; transition: 0.2s; text-shadow: 0 1px 3px #000; }
+        .number-icons i:hover { opacity: 1; transform: scale(1.15); color: #fff; }
+        .card-bottom { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
+        .card-details { display: flex; flex-direction: column; gap: 4px; }
+        .valid-thru { font-size: 7px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: flex; flex-direction: column; }
+        .valid-thru span { font-size: 12px; color: #fff; font-weight: 600; letter-spacing: 1.5px; text-shadow: 0 1px 3px #000; }
+        .holder-name { font-size: 12px; font-weight: 700; color: #f3e5ab; letter-spacing: 1.5px; text-transform: uppercase; text-shadow: 0px 1px 1px rgba(255,255,255,0.3), 0px -1px 1px rgba(0,0,0,0.9), 0 0 8px rgba(212,175,55,0.3); }
+        .visa-logo { text-align: right; }
+        .visa-logo .visa { font-size: 22px; font-weight: 900; font-style: italic; color: #fff; letter-spacing: -1px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .visa-logo .gold { font-size: 11px; color: #f3e5ab; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 10px rgba(243, 229, 171, 0.5); }
+        .balance-section { text-align: center; margin-bottom: 25px; }
+        .balance-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .balance-label i { cursor: pointer; transition: 0.3s; }
+        .balance-amount { font-size: 42px; font-weight: 700; background: linear-gradient(90deg, #f3e5ab, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Playfair Display', serif; }
+        .balance-lak { font-size: 14px; color: #666; margin-top: 5px; }
+        .bcel-card { background: rgba(255,255,255,0.02); border-radius: 16px; padding: 18px 22px; margin-bottom: 25px; border: 1px dashed rgba(212,175,55,0.3); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .bcel-left { display: flex; align-items: center; gap: 12px; }
+        .bcel-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 800; font-size: 12px; }
+        .bcel-info { display: flex; flex-direction: column; gap: 2px; }
+        .bcel-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .bcel-status { font-size: 12px; color: #888; }
+        .bcel-badge { background: rgba(255,255,255,0.05); color: #888; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; }
+        .bcel-badge.linked { background: rgba(0, 150, 94, 0.2); color: #00965E; }
+        .info-card { background: rgba(255,255,255,0.02); border-radius: 16px; padding: 20px 22px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .info-title { font-size: 13px; font-weight: 700; color: #d4af37; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .lbl { color: #888; font-weight: 500; }
+        .info-row .val { color: #fff; font-weight: 600; text-align: right; }
+        .info-row .val.green { color: #4ade80; font-weight: 700; }
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .action-btn { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; color: #666; cursor: not-allowed; position: relative; backdrop-filter: blur(10px); transition: 0.3s;}
+        .action-btn.active-action { cursor: pointer; color: #fff; }
+        .action-btn.active-action:hover { background: rgba(212, 175, 55, 0.1); border-color: #d4af37; transform: translateY(-3px);}
+        .action-btn.active-action i { color: #d4af37; }
+        .action-btn i { font-size: 22px; }
+        .action-btn span { font-size: 11px; font-weight: 500; text-align: center; line-height: 1.2; }
+        .soon-badge { position: absolute; top: -8px; right: -5px; background: #d4af37; color: #000; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .history-section { background: rgba(255, 255, 255, 0.02); border-radius: 20px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); margin-bottom: 30px; }
+        .history-title { font-size: 14px; color: #d4af37; margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .history-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .hist-left { display: flex; flex-direction: column; gap: 4px; }
+        .hist-desc { font-size: 14px; font-weight: 500; color: #fff; }
+        .hist-date { font-size: 11px; color: #777; }
+        .hist-amount { font-size: 15px; font-weight: 600; color: #4ade80; text-shadow: 0 0 5px rgba(74, 222, 128, 0.2); white-space: nowrap; }
+        .footer-note { text-align: center; font-size: 11px; color: #555; line-height: 1.6; margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
+        .security-badges { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .security-badges span { font-size: 10px; color: #777; background: rgba(255,255,255,0.02); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 4px; }
+        .security-badges i { color: #d4af37; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: #222; color: #fff; padding: 14px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; border-left: 4px solid #d4af37; transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto; }
+        .toast.show { transform: translateX(0); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes floatCard { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes shimmer { 100% { left: 200%; } }
+        @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); } 70% { box-shadow: 0 0 0 20px rgba(212,175,55,0); } 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); } }
+        @media (max-width: 480px) {
+            .card-container { padding: 15px; } .brand-title .bank-name { font-size: 13px; } .card-brand .card-type { font-size: 7px; } .card-number { font-size: 14px; letter-spacing: 1px; } .card-balance { padding: 3px 6px; gap: 4px; } .card-balance-usd { font-size: 9px; } .card-balance-lak { font-size: 6px; } .card-balance i { font-size: 10px; } .contactless { font-size: 14px; } .number-icons i { font-size: 11px; } .holder-name { font-size: 10px; } .valid-thru span { font-size: 10px; } .visa-logo .visa { font-size: 18px; } .visa-logo .gold { font-size: 9px; } .balance-amount { font-size: 36px; } .btn-biometric-activate span { display: none; } .btn-biometric-activate { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="container">
+        
+        <div class="top-bar">
+            <div class="lang-toggle">
+                <button id="btnLao" class="active" onclick="changerLangue('lo')">ລາວ</button>
+                <button id="btnEn" onclick="changerLangue('en')">EN</button>
+            </div>
+        </div>
+
+        <!-- PAGE 0 : GATE (Portail VIP) -->
+        <div id="pageGate" class="page active">
+            <div class="header-glass" style="text-align: center;">
+                <div class="header-logos" style="justify-content: center; border-bottom: none; margin-bottom: 10px; padding-bottom: 0;">
+                    <div class="logo-bnp" style="font-size: 20px;"><i class="fas fa-shield-alt"></i> BNP Paribas</div>
+                </div>
+                <h1 data-lang="gate_title" style="margin-top:15px;">Private Access</h1>
+                <p class="subtitle" data-lang="gate_subtitle">VIP Client Portal</p>
+                <div class="secure-badge" style="margin-bottom: 15px;"><i class="fas fa-lock"></i> <span data-lang="gate_text">Please enter your confidential access code.</span></div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <div class="input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="gateCodeInput" placeholder="••••••••" style="text-align: center; letter-spacing: 5px; font-size: 18px;">
+                    </div>
+                </div>
+                <button class="btn-gold" onclick="verifierPortail()">
+                    <i class="fas fa-unlock-alt"></i> <span data-lang="gate_btn">Unlock Access</span>
+                </button>
+                <div class="error-text" id="gateError" data-lang="gate_err" style="text-align: center; margin-top: 15px;">Incorrect access code.</div>
+            </div>
+        </div>
+
+        <!-- PAGE 1 : LOGIN -->
+        <div id="pageLogin" class="page">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+                    <h1 data-lang="login_title">Espace Privé</h1>
+                    <p data-lang="login_subtitle">BNP Paribas Premium</p>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="form-group">
+                        <label data-lang="card_number">Numéro de carte</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-credit-card"></i>
+                            <input type="text" id="loginCard" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" autocomplete="off">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-lang="access_code">Code d'accès</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginCode" placeholder="••••••••••••" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <a href="#" class="forgot-password" data-lang="forgot_password">Mot de passe oublié ?</a>
+                    
+                    <button class="btn-gold" id="btnLoginMain" onclick="verifierAcces()"><span data-lang="access_btn">Accéder à mon espace</span></button>
+                    
+                    <div class="error-msg" id="loginError" data-lang="login_error">Identifiants incorrects. Veuillez réessayer.</div>
+
+                    <div class="biometric-section" id="bioSection">
+                        <p data-lang="or_login_with">Ou se connecter avec</p>
+                        <div class="biometric-icon" id="bioBtn" onclick="loginBiometric()"><i class="fas fa-fingerprint"></i></div>
+                    </div>
+                    
+                    <div class="secure-badge">
+                        <i class="fas fa-shield-alt" style="color:#00965E;"></i> <span data-lang="secure_connection">Connexion sécurisée SSL 256-bits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOADER -->
+        <div id="loadingLogin" class="loader-container">
+            <div class="gold-spinner"></div>
+            <div class="loader-text" data-lang="loading_login">Authentification sécurisée...</div>
+        </div>
+
+        <!-- PAGE 2 : DASHBOARD -->
+        <div id="pageDashboard" class="page">
+            
+            <div class="header-logos">
+                <div class="logo-bnp"><i class="fas fa-leaf"></i> BNP Paribas</div>
+                <div class="logo-visa">VISA <span>Premium</span></div>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn-logout" onclick="deconnexion()"><i class="fas fa-sign-out-alt"></i> <span data-lang="logout">Déconnexion</span></button>
+                <button class="btn-biometric-activate" id="btnActivateBio" onclick="activerEmpreinte()"><i class="fas fa-fingerprint"></i> <span data-lang="activate_bio">Activer l'empreinte</span></button>
+            </div>
+
+            <div class="dashboard-title">
+                <h1 data-lang="dashboard_title">Tableau de bord</h1>
+                <p data-lang="dashboard_subtitle">Bienvenue, VETPANY SIVONGXAY</p>
+            </div>
+
+            <div class="card-wrapper">
+                <div class="card-container">
+                    <div class="card-watermark"></div>
+                    <svg class="card-svg-bg" viewBox="0 0 500 315" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="goldRibbon" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#1f1500" /><stop offset="25%" stop-color="#a67c00" /><stop offset="48%" stop-color="#ffd700" /><stop offset="52%" stop-color="#ffffff" /><stop offset="75%" stop-color="#ffd700" /><stop offset="100%" stop-color="#6e4f00" />
+                            </linearGradient>
+                            <linearGradient id="darkRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#110b00" /><stop offset="50%" stop-color="#735400" /><stop offset="100%" stop-color="#110b00" />
+                            </linearGradient>
+                            <filter id="shadowGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <path d="M -20 260 C 150 260, 220 70, 520 40" fill="none" stroke="url(#goldRibbon)" stroke-width="45" filter="url(#shadowGlow)" />
+                        <path d="M -20 255 C 150 255, 220 65, 520 35" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" />
+                        <path d="M -20 310 C 130 310, 250 120, 520 90" fill="none" stroke="url(#darkRibbon)" stroke-width="20" opacity="0.9" />
+                        <path d="M -20 305 C 130 305, 250 115, 520 85" fill="none" stroke="#a67c00" stroke-width="1" />
+                    </svg>
+
+                    <div class="card-top">
+                        <div class="card-brand">
+                            <div class="brand-title">
+                                <span class="bank-name">BNP PARIBAS</span>
+                                <i class="fas fa-globe-europe card-emblem"></i>
+                            </div>
+                            <div class="card-type">PREMIUM CARD</div>
+                        </div>
+                        
+                        <div class="card-top-right">
+                            <div class="card-balance">
+                                <div class="card-balance-text">
+                                    <div class="card-balance-usd">
+                                        <div id="cardBalanceTop">3,010,000.00</div> <span>USD</span>
+                                    </div>
+                                    <div class="card-balance-lak" id="cardBalanceLakTop">≈ 67,678,927,000 LAK</div>
+                                </div>
+                                <i class="fas fa-eye" id="eyeIconTop" onclick="toggleCardBalance()"></i>
+                            </div>
+                            <i class="fas fa-wifi contactless"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-middle">
+                        <div class="chip"></div>
+                    </div>
+                    
+                    <div class="number-row">
+                        <div class="card-number" id="cardNumberText">**** **** **** 3460</div>
+                        <div class="number-icons">
+                            <i class="fas fa-eye-slash" id="eyeIconNumber" onclick="toggleCardNumber()"></i>
+                            <i class="fas fa-copy" onclick="copyCardNumber()" title="Copier"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-bottom">
+                        <div class="card-details">
+                            <div class="valid-thru">VALID THRU <span>12/28</span></div>
+                            <div class="holder-name">VETPANY SIVONGXAY</div>
+                        </div>
+                        <div class="visa-logo">
+                            <div class="visa">VISA</div>
+                            <div class="gold">Gold</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="balance-section">
+                <div class="balance-label">
+                    <span data-lang="available_balance">Solde Disponible</span> <i class="fas fa-eye" onclick="toggleMainBalance()"></i>
+                </div>
+                <div class="balance-amount" id="mainBalance">3,010,000.00 USD</div>
+                <div class="balance-lak" id="mainBalanceLak">≈ 67,678,927,000 LAK</div>
+            </div>
+
+            <div class="bcel-card" id="linkedCard">
+                <div class="bcel-left">
+                    <div class="bcel-icon" id="linkedIcon">BANK</div>
+                    <div class="bcel-info">
+                        <span class="bcel-name" id="linkedName" data-lang="no_linked_account">Aucun compte lié</span>
+                        <span class="bcel-status" id="linkedStatus" data-lang="not_linked_yet">Non connecté</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="bcel-badge" id="linkedBadge" data-lang="pending">En attente</div>
+                    <button id="btnUnlink" onclick="desvincularCuenta()" style="display: none; background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 18px;" title="Déconnecter le compte">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title"><i class="fas fa-info-circle"></i> <span data-lang="card_info">Informations de la carte</span></div>
+                <div class="info-row"><span class="lbl" data-lang="holder">Titulaire</span><span class="val">VETPANY SIVONGXAY</span></div>
+                <div class="info-row"><span class="lbl" data-lang="card_number">Numéro de carte</span><span class="val">4822 5670 8715 3460</span></div>
+                <div class="info-row"><span class="lbl" data-lang="card_type">Type de carte</span><span class="val">Visa Gold Premium</span></div>
+                <div class="info-row"><span class="lbl" data-lang="issuer">Émetteur</span><span class="val">BNP Paribas</span></div>
+                <div class="info-row"><span class="lbl" data-lang="country">Pays</span><span class="val">Laos</span></div>
+                <div class="info-row"><span class="lbl" data-lang="status">Statut</span><span class="val green"><i class="fas fa-check-circle"></i> <span data-lang="active">Actif</span></span></div>
+            </div>
+
+            <div class="actions-grid">
+                <div class="action-btn active-action" onclick="openVinculacionPage()" id="btnLinkCard">
+                    <i class="fas fa-link"></i>
+                    <span data-lang="link_bcel">Lier un compte</span>
+                </div>
+                <div class="action-btn">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span data-lang="transfer_to_bcel">Virement</span>
+                    <span class="soon-badge" data-lang="soon">Bientôt</span>
+                </div>
+                <div class="action-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    <span data-lang="download_statement">Relevé PDF</span>
+                    <span class="soon-badge" data-lang="soon">Bientôt</span>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <div class="history-title"><i class="fas fa-history"></i> <span data-lang="history">Transaction History</span></div>
+                <div class="history-item">
+                    <div class="hist-left">
+                        <span class="hist-desc" data-lang="loan_received">BNP Paribas Loan Received</span>
+                        <span class="hist-date">14/10/2026 · LOAN-2026-0001</span>
+                    </div>
+                    <span class="hist-amount">+ 3 000 000,00 USD</span>
+                </div>
+                <div class="history-item">
+                    <div class="hist-left">
+                        <span class="hist-desc" data-lang="withdrawal_fees">Withdrawal Fees Added</span>
+                        <span class="hist-date">14/10/2026 · FEE-2026-0001</span>
+                    </div>
+                    <span class="hist-amount">+ 10 000,00 USD</span>
+                </div>
+            </div>
+
+            <div class="footer-note">
+                <i class="fas fa-shield-alt" style="color:#d4af37;"></i> <span data-lang="footer_note">Vos données sont protégées selon les normes bancaires internationales.</span>
+                <div class="security-badges">
+                    <span><i class="fas fa-lock"></i> SSL Sécurisé</span>
+                    <span><i class="fas fa-check-circle"></i> PCI DSS</span>
+                    <span><i class="fas fa-globe"></i> Alliance Internationale</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PAGE 3 : LIAISON -->
+        <div id="pageVinculacion" class="page">
+            <div class="glass-panel">
+                <button class="btn-logout" onclick="goBackToDashboard()" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> <span data-lang="back">Retour</span></button>
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 24px; color: #d4af37; margin-bottom: 5px; text-align: center;" data-lang="link_title">Lier un compte</h1>
+                <p style="font-size: 12px; color: #888; text-align: center; margin-bottom: 25px;" data-lang="kyc_subtitle">Vérification d'identité bancaire (KYC)</p>
+
+                <div id="linkFormStep">
+                    <div class="form-group">
+                        <label data-lang="bank_partner">Banque Partenaire</label>
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border-radius: 14px; margin-bottom: 10px; border: 1px solid #00965E; background: rgba(0, 150, 94, 0.1);">
+                            <div style="font-size: 18px; font-weight: 800; color: #00965E; width: 60px;">BFL</div>
+                            <div style="flex: 1; text-align: left; padding-left: 10px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Banque Franco-Lao</div>
+                                <div style="font-size: 10px; color: #00965E;" data-lang="selected">Sélectionné</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #00965E; font-size: 20px;"></i>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); opacity: 0.5; cursor: not-allowed;">
+                            <div style="font-size: 18px; font-weight: 800; color: #888; width: 60px;">BCEL</div>
+                            <div style="flex: 1; text-align: left; padding-left: 10px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Banque de Commerce Extérieur</div>
+                                <div style="font-size: 10px; color: #888;" data-lang="coming_soon">Bientôt disponible</div>
+                            </div>
+                            <i class="fas fa-lock" style="color: #888; font-size: 16px;"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="account_number">BFL Account Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag"></i>
+                            <input type="text" id="accountNumber" data-lang-ph="placeholder_account" placeholder="Enter your account number" oninput="validateField(this, 'errAccount')">
+                        </div>
+                        <div class="error-text" id="errAccount">Invalid account number.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="cif_number">CIF (Client ID)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-badge"></i>
+                            <input type="text" id="cifNumber" data-lang-ph="placeholder_cif" placeholder="Enter your CIF" oninput="validateField(this, 'errCif')">
+                        </div>
+                        <div class="error-text" id="errCif">Invalid CIF number.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="account_type">Account Type</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-wallet"></i>
+                            <select id="accountType">
+                                <option value="savings" data-lang="savings">Savings Account</option>
+                                <option value="checking" data-lang="checking" selected>Checking Account (Current)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="holder_name">Account Holder Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="accountHolder" data-lang-ph="placeholder_name" placeholder="Enter your full name" oninput="validateField(this, 'errName')">
+                        </div>
+                        <div class="error-text" id="errName">Name must be at least 3 letters.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phone" data-lang-ph="placeholder_phone" placeholder="+856 20 5555 5555" oninput="validateField(this, 'errPhone')">
+                        </div>
+                        <div class="error-text" id="errPhone">Invalid format.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="email">Email Address (For verification)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" data-lang-ph="placeholder_email" placeholder="exemple@email.com" oninput="validateField(this, 'errEmail')">
+                        </div>
+                        <div class="error-text" id="errEmail">Invalid email address.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="dpi">ID Document</label>
+                        <div class="file-upload-wrapper" id="fileWrapper">
+                            <input type="file" id="dpiFile" accept="image/*" onchange="validateFile(this)">
+                            <i class="fas fa-id-card"></i>
+                            <div class="file-upload-text" id="dpiFileName" data-lang="placeholder_dpi">Click to upload your ID</div>
+                        </div>
+                        <div class="error-text" id="errFile">Please upload an ID document.</div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 11px; color: #aaa; border: 1px solid rgba(255,255,255,0.05);">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; cursor: pointer; color: #fff;">
+                            <input type="checkbox" id="chkTerms" style="margin-top: 2px; accent-color: #d4af37;">
+                            <span data-lang="terms_text">I accept the Terms and Conditions and Privacy Policy of BNP Paribas & BFL.</span>
+                        </label>
+                        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; color: #fff;">
+                            <input type="checkbox" id="chkAml" style="margin-top: 2px; accent-color: #d4af37;">
+                            <span data-lang="aml_text">I certify that these funds do not come from illegal activities (Anti-Money Laundering).</span>
+                        </label>
+                    </div>
+
+                    <button class="btn-gold" id="btnSendOtp" onclick="demanderCodeOTP()">
+                        <i class="fas fa-shield-alt" id="btnLinkIcon"></i> 
+                        <span id="btnLinkText" data-lang="confirm_link">Link my account</span>
+                        <div class="btn-spinner" id="btnLinkSpinner"></div>
+                    </button>
+                </div>
+
+                <div id="otpStep" style="display: none; text-align: center;">
+                    <div style="font-size: 40px; color: #d4af37; margin-bottom: 15px;"><i class="fas fa-envelope-open-text"></i></div>
+                    <h3 style="color: #fff; margin-bottom: 10px;" data-lang="otp_title">Identity Verification</h3>
+                    <p style="font-size: 12px; color: #888; margin-bottom: 20px;" data-lang="otp_subtitle">Please enter the security code sent by BFL bank to:</p>
+                    <strong id="displayEmail" style="color: #d4af37; display: block; margin-bottom: 20px;"></strong>
+                    
+                    <div class="form-group">
+                        <input type="text" id="otpCodeInput" maxlength="10" placeholder="00000000" style="text-align: center; font-size: 24px; letter-spacing: 10px; padding: 15px; background: rgba(0,0,0,0.6); border: 1px solid #d4af37; color: #d4af37; border-radius: 14px; width: 100%; font-family: monospace;">
+                    </div>
+
+                    <button class="btn-gold" id="btnVerifyOtp" onclick="validerCodeOTP()">
+                        <i class="fas fa-check-double" id="btnOtpIcon"></i> 
+                        <span id="btnOtpText" data-lang="validate_link">Validate and Link Account</span>
+                        <div class="btn-spinner" id="btnOtpSpinner"></div>
+                    </button>
+                    <button class="btn-logout" onclick="retourFormulaire()" style="width: 100%; margin-top: 15px; justify-content: center;" data-lang="change_email">Change my email</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PAGE 4 : SUCCÈS -->
+        <div id="pageSuccess" class="page">
+            <div class="glass-panel" style="text-align: center;">
+                <div style="font-size: 60px; color: #4ade80; margin-bottom: 15px;"><i class="fas fa-check-circle"></i></div>
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 24px; color: #d4af37; margin-bottom: 10px;" data-lang="success_title">Liaison Réussie !</h1>
+                <p style="font-size: 13px; color: #888; margin-bottom: 20px;" data-lang="success_subtitle">Votre compte est maintenant lié à votre carte BNP Paribas.</p>
+
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.2); border-radius: 14px; padding: 20px; margin-bottom: 20px;">
+                    <p style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" data-lang="reference">Référence</p>
+                    <div id="linkRef" style="font-size: 18px; font-weight: 800; color: #d4af37; letter-spacing: 1px;">BNP-KYC-2026-0000</div>
+                </div>
+
+                <div style="background: rgba(74, 222, 128, 0.1); border-left: 4px solid #4ade80; border-radius: 8px; padding: 15px; text-align: left; margin-bottom: 20px;">
+                    <p style="font-size: 13px; color: #ccc;" data-lang="congrats_bfl"><i class="fas fa-check-circle" style="color: #4ade80; margin-right: 8px;"></i> <strong>Félicitations:</strong> La connexion avec BFL a été validée.</p>
+                </div>
+
+                <button class="btn-gold" onclick="goBackToDashboard()" style="margin-top: 10px;">
+                    <i class="fas fa-home"></i> <span data-lang="back_dashboard">Retour au tableau de bord</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://xoryktbyleyeukhtlxei.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_RrP0uLOAEOW4PhgVnP483Q_tdjN1cUh'; 
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const CARD_NUMBER = "4822567087153460";
+        const ACCESS_CODE = "BNP-2026-VET";
+        const BIOMETRIC_STORAGE_KEY = "bnp_biometric_id";
+        const DEVICE_TOKEN_KEY = "bnp_device_token";
+        const GATE_STORAGE_KEY = "bnp_gate_unlocked";
+        const GATE_CODE = "VETPANY2026";
+
+        let isLinked = false;
+        let isBalanceVisible = true;
+        let isCardNumberVisible = false;
+
+        function verifierPortail() {
+            const gateCode = document.getElementById('gateCodeInput').value.trim();
+            const gateError = document.getElementById('gateError');
+            if (gateCode === GATE_CODE) {
+                gateError.classList.remove('show');
+                localStorage.setItem(GATE_STORAGE_KEY, "true");
+                showPage('pageLogin');
+            } else {
+                gateError.classList.add('show');
+            }
+        }
+
+        function checkDeviceSecurity() {
+            let deviceToken = localStorage.getItem(DEVICE_TOKEN_KEY);
+            if (!deviceToken) {
+                deviceToken = prompt("Première connexion sur cet appareil.\nVeuillez entrer votre code de sécurité (Device Token) :");
+                if (deviceToken) {
+                    localStorage.setItem(DEVICE_TOKEN_KEY, deviceToken.trim());
+                } else {
+                    alert("Accès refusé. Un code est obligatoire.");
+                }
+            }
+            return localStorage.getItem(DEVICE_TOKEN_KEY);
+        }
+
+        const traductions = {
+            lo: {
+                gate_title: "Private Access", gate_subtitle: "VIP Client Portal", gate_text: "Please enter your confidential access code.", gate_btn: "Unlock Access", gate_err: "Incorrect access code.",
+                login_title: "ພື້ນທີ່ສ່ວນຕົວ", login_subtitle: "BNP Paribas ພຣີມຽມ", card_number: "ໝາຍເລກບັດ", access_code: "ລະຫັດເຂົ້າໃຊ້", access_btn: "ເຂົ້າເຖິງພື້ນທີ່ຂອງຂ້ອຍ", forgot_password: "ລືມລະຫັດຜ່ານ?", or_login_with: "ຫຼືເຂົ້າສູ່ລະບົບດ້ວຍ", login_error: "ຂໍ້ມູນບໍ່ຖືກຕ້ອງ.", secure_connection: "ການເຊື່ອມຕໍ່ທີ່ປອດໄພ SSL 256-bits", loading_login: "ກຳລັງກວດສອບ...", dashboard_title: "ແຜງຄວບຄຸມ", dashboard_subtitle: "ຍິນດີຕ້ອນຮັບ, VETPANY", available_balance: "ຍອດເງິນທີ່ມີ", no_linked_account: "ບໍ່ມີບັນຊີທີ່ເຊື່ອມຕໍ່", not_linked_yet: "ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່", pending: "ລໍຖ້າ", card_info: "ຂໍ້ມູນບັດ", holder: "ເຈົ້າຂອງບັດ", card_type: "ປະເພດບັດ", issuer: "ຜູ້ອອກບັດ", country: "ປະເທດ", status: "ສະຖານະ", active: "ເປີດໃຊ້ງານ", link_bcel: "ເຊື່ອມຕໍ່ບັນຊີ", transfer_to_bcel: "ໂອນເງິນ", download_statement: "ໃບແຈ້ງຍອດ", history: "ປະຫວັດທຸລະກຳ", loan_received: "ໄດ້ຮັບເງິນກູ້", withdrawal_fees: "ຄ່າທຳນຽມ", footer_note: "ຂໍ້ມູນຂອງທ່ານໄດ້ຮັບການປົກປ້ອງ.", logout: "ອອກຈາກລະບົບ", soon: "ໄວໆນີ້", activate_bio: "ເປີດໃຊ້ລາຍນິ້ວມື", back: "ກັບຄືນ", link_title: "ເຊື່ອມຕໍ່ບັນຊີ", kyc_subtitle: "ການກວດສອບຕົວຕົນທະນາຄານ (KYC)", bank_partner: "ທະນາຄານຄູ່ຮ່ວມງານ", selected: "ເລືອກແລ້ວ", coming_soon: "ມາໄວໆນີ້", account_number: "ໝາຍເລກບັນຊີ BFL", placeholder_account: "ປ້ອນໝາຍເລກບັນຊີຂອງທ່ານ", account_type: "ປະເພດບັນຊີ", savings: "ບັນຊີອອມຊັບ", checking: "ບັນຊີກະແສລວມ", holder_name: "ຊື່ເຈົ້າຂອງບັນຊີ", placeholder_name: "ປ້ອນຊື່ເຕັມຂອງທ່ານ", phone: "ເບີໂທລະສັບ", placeholder_phone: "+856 20 5555 5555", email: "ອີເມວ (ສຳລັບການກວດສອບ)", placeholder_email: "exemple@email.com", dpi: "ເອກະສານຢືນຢັນຕົວຕົນ", placeholder_dpi: "ຄລິກເພື່ອອັບໂຫຼດເອກະສານ", terms_text: "ຂ້ອຍຍອມຮັບຂໍ້ກຳນົດ ແລະ ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວຂອງ BNP Paribas & BFL.", aml_text: "ຂ້ອຍຢືນຢັນວ່າເງິນນີ້ບໍ່ໄດ້ມາຈາກກິດຈະກຳທີ່ຜິດກົດໝາຍ.", confirm_link: "ເຊື່ອມຕໍ່ບັນຊີຂອງຂ້ອຍ", otp_title: "ການກວດສອບຕົວຕົນ BFL", otp_subtitle: "ກະລຸນາປ້ອນລະຫັດຄວາມປອດໄພທີ່ສົ່ງໂດຍທະນາຄານ BFL ໄປທີ່:", validate_link: "ຢືນຢັນ ແລະ ເຊື່ອມຕໍ່", change_email: "ປ່ຽນອີເມວຂອງຂ້ອຍ", success_title: "ເຊື່ອມຕໍ່ສຳເລັດ!", success_subtitle: "ບັນຊີຂອງທ່ານໄດ້ເຊື່ອມຕໍ່ກັບບັດ BNP Paribas ແລ້ວ.", reference: "ເອກະສານອ້າງອີງ", congrats_bfl: "<strong>ຂໍຊົມເຊີຍ:</strong> ການເຊື່ອມຕໍ່ກັບ BFL ໄດ້ຮັບການຢືນຢັນແລ້ວ.", back_dashboard: "ກັບຄືນສູ່ແຜງຄວບຄຸມ", err_account: "ໝາຍເລກບັນຊີບໍ່ຖືກຕ້ອງ", err_name: "ຊື່ຕ້ອງມີຢ່າງໜ້ອຍ 3 ຕົວອັກສອນ", err_phone: "ເບີໂທບໍ່ຖືກຕ້ອງ", err_email: "ອີເມວບໍ່ຖືກຕ້ອງ", err_file: "ກະລຸນາອັບໂຫຼດເອກະສານ", cif_number: "CIF (Client ID)", placeholder_cif: "ປ້ອນ CIF ຂອງທ່ານ"
+            },
+            en: {
+                gate_title: "Private Access", gate_subtitle: "VIP Client Portal", gate_text: "Please enter your confidential access code.", gate_btn: "Unlock Access", gate_err: "Incorrect access code.",
+                login_title: "Private Space", login_subtitle: "BNP Paribas Premium", card_number: "Card Number", access_code: "Access Code", access_btn: "Access My Space", forgot_password: "Forgot password?", or_login_with: "Or log in with", login_error: "Incorrect credentials.", secure_connection: "Secure SSL 256-bits connection", loading_login: "Verifying security...", dashboard_title: "Dashboard", dashboard_subtitle: "Welcome, VETPANY", available_balance: "Available Balance", no_linked_account: "No linked account", not_linked_yet: "Not connected", pending: "Pending", card_info: "Card Information", holder: "Card Holder", card_type: "Card Type", issuer: "Issuer", country: "Country", status: "Status", active: "Active", link_bcel: "Link Account", transfer_to_bcel: "Transfer", download_statement: "Statement PDF", history: "Transaction History", loan_received: "BNP Paribas Loan Received", withdrawal_fees: "Withdrawal Fees Added", footer_note: "Your data is protected.", logout: "Logout", soon: "Soon", activate_bio: "Activate fingerprint", back: "Back", link_title: "Link Account", kyc_subtitle: "Bank Identity Verification (KYC)", bank_partner: "Partner Bank", selected: "Selected", coming_soon: "Coming soon", account_number: "BFL Account Number", placeholder_account: "Enter your account number", account_type: "Account Type", savings: "Savings Account", checking: "Checking Account", holder_name: "Account Holder Name", placeholder_name: "Enter your full name", phone: "Phone Number", placeholder_phone: "+856 20 5555 5555", email: "Email Address (For verification)", placeholder_email: "exemple@email.com", dpi: "ID Document", placeholder_dpi: "Click to upload your ID", terms_text: "I accept the Terms and Conditions and Privacy Policy of BNP Paribas & BFL.", aml_text: "I certify that these funds do not come from illegal activities (Anti-Money Laundering).", confirm_link: "Link my account", otp_title: "BFL Identity Verification", otp_subtitle: "Please enter the security code sent by BFL bank to:", validate_link: "Validate and Link Account", change_email: "Change my email", success_title: "Linking Successful!", success_subtitle: "Your account is now linked to your BNP Paribas card.", reference: "Reference", congrats_bfl: "<strong>Congratulations:</strong> The connection with BFL has been validated.", back_dashboard: "Back to Dashboard", err_account: "Invalid account number.", err_name: "Name must be at least 3 letters.", err_phone: "Invalid format.", err_email: "Invalid email address.", err_file: "Please upload an ID document.", cif_number: "CIF (Client ID)", placeholder_cif: "Enter your CIF"
+            }
+        };
+
+        let langueActuelle = 'lo';
+
+        function changerLangue(lang) {
+            langueActuelle = lang;
+            document.getElementById('btnLao').classList.toggle('active', lang === 'lo');
+            document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+            
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const cle = el.getAttribute('data-lang');
+                if (traductions[lang] && traductions[lang][cle]) {
+                    el.innerHTML = traductions[lang][cle];
+                }
+            });
+
+            document.querySelectorAll('[data-lang-ph]').forEach(el => {
+                const cle = el.getAttribute('data-lang-ph');
+                if (traductions[lang] && traductions[lang][cle]) {
+                    el.setAttribute('placeholder', traductions[lang][cle]);
+                }
+            });
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+            toast.innerHTML = `<i class="fas ${icon}" style="color:#d4af37;"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        async function checkLinkedAccount() {
+            try {
+                const { data, error } = await supabaseClient.from('linked_accounts').select('*').eq('card_number', CARD_NUMBER);
+                if (data && data.length > 0) { 
+                    isLinked = true; 
+                    updateLinkedUI(data[0].account_number); 
+                }
+            } catch (err) { console.log("Aucun compte lié."); }
+        }
+
+        function updateLinkedUI(accountNum) {
+            document.getElementById('linkedIcon').textContent = "BFL";
+            document.getElementById('linkedIcon').style.background = "#003399"; 
+            document.getElementById('linkedIcon').style.color = "#fff";
+            document.getElementById('linkedName').textContent = "BFL";
+            document.getElementById('linkedName').removeAttribute('data-lang');
+            document.getElementById('linkedStatus').textContent = "Compte connecté: " + accountNum;
+            document.getElementById('linkedStatus').removeAttribute('data-lang');
+            const badge = document.getElementById('linkedBadge');
+            badge.textContent = langueActuelle === 'lo' ? "ເຊື່ອມຕໍ່ແລ້ວ" : "Linked"; 
+            badge.classList.add('linked'); 
+            badge.removeAttribute('data-lang');
+            document.getElementById('btnUnlink').style.display = 'block';
+            const actionBtn = document.getElementById('btnLinkCard');
+            if (actionBtn) {
+                actionBtn.classList.remove('active-action');
+                actionBtn.innerHTML = `<i class="fas fa-check-circle" style="color: #4ade80;"></i><span>${langueActuelle === 'lo' ? 'ບັນຊີກວດສອບແລ້ວ' : 'Verified Account'}</span>`;
+                actionBtn.style.borderColor = '#4ade80';
+                actionBtn.style.color = '#4ade80';
+            }
+        }
+
+        async function desvincularCuenta() {
+            if (!confirm(langueActuelle === 'lo' ? "ຕັດການເຊື່ອມຕໍ່ບັນຊີ BFL?" : "Are you sure you want to unlink your BFL account?")) return;
+            const deviceToken = localStorage.getItem(DEVICE_TOKEN_KEY);
+            try {
+                const { error } = await supabaseClient.rpc('secure_delete_link', { p_device_token: deviceToken, p_card_number: CARD_NUMBER });
+                if (error) throw error;
+                showToast(langueActuelle === 'lo' ? "ຕັດການເຊື່ອມຕໍ່ສຳເລັດ." : "Account unlinked successfully.", "success");
+                isLinked = false;
+                document.getElementById('linkedIcon').textContent = "BANK";
+                document.getElementById('linkedIcon').style.background = "rgba(255,255,255,0.05)";
+                document.getElementById('linkedIcon').style.color = "#888";
+                document.getElementById('linkedName').textContent = "Aucun compte lié";
+                document.getElementById('linkedName').setAttribute('data-lang', 'no_linked_account');
+                document.getElementById('linkedStatus').textContent = "Non connecté";
+                document.getElementById('linkedStatus').classList.remove('linked');
+                document.getElementById('linkedStatus').setAttribute('data-lang', 'not_linked_yet');
+                const badge = document.getElementById('linkedBadge');
+                badge.textContent = "En attente";
+                badge.classList.remove('linked');
+                badge.setAttribute('data-lang', 'pending');
+                document.getElementById('btnUnlink').style.display = 'none';
+                const actionBtn = document.getElementById('btnLinkCard');
+                actionBtn.classList.add('active-action');
+                actionBtn.innerHTML = `<i class="fas fa-link"></i><span data-lang="link_bcel">Lier un compte</span>`;
+                actionBtn.style.borderColor = '';
+                actionBtn.style.color = '';
+                changerLangue(langueActuelle);
+            } catch (err) { console.error(err); showToast("Erreur.", "error"); }
+        }
+
+        window.onload = function() {
+            checkDeviceSecurity();
+            if (localStorage.getItem(GATE_STORAGE_KEY) === "true") { showPage('pageLogin'); } else { showPage('pageGate'); }
+            if (localStorage.getItem(BIOMETRIC_STORAGE_KEY)) {
+                document.getElementById('bioSection').classList.add('active');
+                document.getElementById('btnActivateBio').style.display = 'none';
+            }
+            checkLinkedAccount();
+        }
+
+        function verifierAcces() {
+            const cardInput = document.getElementById('loginCard');
+            const codeInput = document.getElementById('loginCode');
+            const errorMsg = document.getElementById('loginError');
+            errorMsg.classList.remove('show');
+            const cardSaisi = cardInput.value.replace(/\s/g, '');
+            const codeSaisi = codeInput.value.trim();
+            if (cardSaisi === CARD_NUMBER && codeSaisi === ACCESS_CODE) {
+                connecterUtilisateur();
+            } else {
+                errorMsg.classList.add('show');
+                cardInput.style.borderColor = '#f87171'; codeInput.style.borderColor = '#f87171';
+                setTimeout(() => { cardInput.style.borderColor = 'rgba(255,255,255,0.08)'; codeInput.style.borderColor = 'rgba(255,255,255,0.08)'; }, 1500);
+            }
+        }
+
+        function connecterUtilisateur() {
+            document.getElementById('pageLogin').classList.remove('active');
+            document.getElementById('loadingLogin').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('loadingLogin').classList.remove('show');
+                showPage('pageDashboard');
+                checkLinkedAccount();
+            }, 2000);
+        }
+
+        function deconnexion() {
+            document.getElementById('loginCard').value = ""; document.getElementById('loginCode').value = "";
+            showPage('pageLogin');
+            if (localStorage.getItem(BIOMETRIC_STORAGE_KEY)) document.getElementById('bioSection').classList.add('active');
+        }
+
+        function openVinculacionPage() {
+            if (isLinked) { showToast("Compte déjà lié.", "success"); return; }
+            showPage('pageVinculacion');
+        }
+        function goBackToDashboard() { showPage('pageDashboard'); }
+
+        function validateField(input, errorId) {
+            let isValid = false;
+            const error = document.getElementById(errorId);
+            if (errorId === 'errAccount') isValid = input.value.trim().length >= 5;
+            else if (errorId === 'errName') isValid = input.value.trim().length >= 3;
+            else if (errorId === 'errPhone') isValid = /^[0-9+\s-]{8,}$/.test(input.value.trim());
+            else if (errorId === 'errEmail') isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+            else if (errorId === 'errCif') isValid = input.value.trim().length >= 3;
+            
+            if (isValid) { input.classList.remove('invalid'); error.classList.remove('show'); } 
+            else { input.classList.add('invalid'); error.classList.add('show'); }
+            return isValid;
+        }
+
+        function validateFile(input) {
+            const fileNameDisplay = document.getElementById('dpiFileName');
+            const error = document.getElementById('errFile');
+            if (input.files && input.files.length > 0) {
+                fileNameDisplay.innerHTML = `<span style="color:#4ade80;">${input.files[0].name}</span>`;
+                error.classList.remove('show'); return true;
+            } else {
+                fileNameDisplay.innerHTML = traductions[langueActuelle].placeholder_dpi;
+                error.classList.add('show'); return false;
+            }
+        }
+
+        async function demanderCodeOTP() {
+            const isAccountValid = validateField(document.getElementById('accountNumber'), 'errAccount');
+            const isNameValid = validateField(document.getElementById('accountHolder'), 'errName');
+            const isPhoneValid = validateField(document.getElementById('phone'), 'errPhone');
+            const isEmailValid = validateField(document.getElementById('email'), 'errEmail');
+            const isCifValid = validateField(document.getElementById('cifNumber'), 'errCif');
+            const isFileValid = validateFile(document.getElementById('dpiFile'));
+            const termsChecked = document.getElementById('chkTerms').checked;
+            const amlChecked = document.getElementById('chkAml').checked;
+
+            if (!isAccountValid || !isNameValid || !isPhoneValid || !isEmailValid || !isCifValid || !isFileValid) {
+                showToast(langueActuelle === 'lo' ? "ກະລຸນາແກ້ໄຂຂໍ້ມູນທີ່ຜິດພາດ." : "Please correct the fields.", "error"); return;
+            }
+            if (!termsChecked || !amlChecked) {
+                showToast(langueActuelle === 'lo' ? "ກະລຸນາຍອມຮັບເງື່ອນໄຂ." : "Please accept the terms.", "error"); return;
+            }
+
+            const nomSaisi = document.getElementById('accountHolder').value.trim().toUpperCase();
+            const numCompteSaisi = document.getElementById('accountNumber').value.trim();
+            const cifSaisi = document.getElementById('cifNumber').value.trim();
+            const typeCompteSaisi = document.getElementById('accountType').value;
+
+            if (nomSaisi !== "VETPANY SIVONGXAY") {
+                showToast(langueActuelle === 'lo' ? "ຊື່ບໍ່ຖືກຕ້ອງ." : "Name does not match BFL account holder.", "error"); return;
+            }
+            if (numCompteSaisi !== "001112415301010015") {
+                showToast(langueActuelle === 'lo' ? "ໝາຍເລກບັນຊີບໍ່ຖືກຕ້ອງ." : "Invalid BFL account number.", "error"); return;
+            }
+            if (cifSaisi !== "1124153") {
+                showToast(langueActuelle === 'lo' ? "CIF ບໍ່ຖືກຕ້ອງ." : "Invalid CIF number.", "error"); return;
+            }
+            if (typeCompteSaisi !== "checking") {
+                showToast(langueActuelle === 'lo' ? "ປະເພດບັນຊີບໍ່ຖືກຕ້ອງ." : "Please select Checking Account.", "error"); return;
+            }
+
+            const btn = document.getElementById('btnSendOtp');
+            const icon = document.getElementById('btnLinkIcon');
+            const text = document.getElementById('btnLinkText');
+            const spinner = document.getElementById('btnLinkSpinner');
+            btn.disabled = true; icon.style.display = 'none'; text.textContent = '...'; spinner.style.display = 'block';
+
+            const email = document.getElementById('email').value.trim();
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithOtp({
+                    email: email,
+                    options: { shouldCreateUser: true, emailRedirectTo: undefined }
+                });
+                if (error) throw error;
+                document.getElementById('displayEmail').textContent = email;
+                document.getElementById('linkFormStep').style.display = 'none';
+                document.getElementById('otpStep').style.display = 'block';
+                showToast(langueActuelle === 'lo' ? "ສົ່ງລະຫັດແລ້ວ!" : "Code sent!", "success");
+            } catch (err) {
+                console.error(err);
+                showToast(langueActuelle === 'lo' ? "ຜິດພາດ." : "Error sending code.", "error");
+            } finally {
+                btn.disabled = false; icon.style.display = 'inline-block'; text.textContent = traductions[langueActuelle].confirm_link; spinner.style.display = 'none';
+            }
+        }
+
+        async function validerCodeOTP() {
+            const codeSaisi = document.getElementById('otpCodeInput').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (codeSaisi.length < 6 || codeSaisi.length > 10) { 
+                showToast(langueActuelle === 'lo' ? "ລະຫັດບໍ່ຖືກຕ້ອງ." : "Invalid code.", "error"); 
+                return; 
+            }
+
+            const btn = document.getElementById('btnVerifyOtp');
+            const icon = document.getElementById('btnOtpIcon');
+            const text = document.getElementById('btnOtpText');
+            const spinner = document.getElementById('btnOtpSpinner');
+            btn.disabled = true; icon.style.display = 'none'; text.textContent = '...'; spinner.style.display = 'block';
+
+            try {
+                // 1. Vérification de l'OTP (Tente 'signup' puis 'magiclink')
+                let { error: otpError } = await supabaseClient.auth.verifyOtp({ 
+                    email: email, 
+                    token: codeSaisi, 
+                    type: 'signup' 
+                });
+                
+                if (otpError) {
+                    const { error: magicLinkError } = await supabaseClient.auth.verifyOtp({ 
+                        email: email, 
+                        token: codeSaisi, 
+                        type: 'magiclink' 
+                    });
+                    otpError = magicLinkError;
+                }
+
+                if (otpError) {
+                    console.error("OTP Error:", otpError);
+                    throw new Error("OTP_INVALID");
+                }
+
+                // 2. Enregistrement dans la BDD
+                const deviceToken = localStorage.getItem(DEVICE_TOKEN_KEY);
+                const { error: rpcError } = await supabaseClient.rpc('secure_insert_link', {
+                    p_device_token: deviceToken,
+                    p_card_number: CARD_NUMBER,
+                    p_account_number: document.getElementById('accountNumber').value.trim(),
+                    p_account_type: document.getElementById('accountType').value,
+                    p_holder_name: document.getElementById('accountHolder').value.trim(),
+                    p_phone: document.getElementById('phone').value.trim(),
+                    p_email: email,
+                    p_cif: document.getElementById('cifNumber').value.trim()
+                });
+                
+                if (rpcError) {
+                    console.error("RPC Error:", rpcError);
+                    throw new Error("RPC_ERROR");
+                }
+
+                // 3. Succès
+                isLinked = true;
+                updateLinkedUI(document.getElementById('accountNumber').value.trim());
+                document.getElementById('linkRef').textContent = `BNP-KYC-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+                showPage('pageSuccess');
+            } catch (err) {
+                console.error(err);
+                if (err.message === "OTP_INVALID") {
+                    showToast(langueActuelle === 'lo' ? "ລະຫັດບໍ່ຖືກຕ້ອງ ຫຼື ໝົດອາຍຸ." : "Incorrect or expired code.", "error");
+                } else {
+                    showToast(langueActuelle === 'lo' ? "ຂໍ້ຜິດພາດທາງເທກນິກ. ກະລຸນາລອງໃໝ່." : "Technical error. Please try again.", "error");
+                }
+            } finally {
+                btn.disabled = false; icon.style.display = 'inline-block'; text.textContent = traductions[langueActuelle].validate_link; spinner.style.display = 'none';
+            }
+        }
+
+        function retourFormulaire() {
+            document.getElementById('otpStep').style.display = 'none';
+            document.getElementById('linkFormStep').style.display = 'block';
+            document.getElementById('otpCodeInput').value = '';
+        }
+
+        async function activerEmpreinte() {
+            const btn = document.getElementById('btnActivateBio');
+            if (!window.PublicKeyCredential) { showToast("Non supporté.", "error"); return; }
+            try {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>...</span>';
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                const publicKeyCredentialCreationOptions = {
+                    challenge: challenge, rp: { name: "BNP Paribas Premium", id: window.location.hostname },
+                    user: { id: Uint8Array.from(CARD_NUMBER, c => c.charCodeAt(0)), name: "vetpany@bnpparibas.com", displayName: "Vetpany Sivongxay" },
+                    pubKeyCredParams: [{ alg: -7, type: "public-key" }], authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+                    timeout: 60000, attestation: "none"
+                };
+                const credential = await navigator.credentials.create({ publicKey: publicKeyCredentialCreationOptions });
+                if (credential) {
+                    const credentialIdBase64 = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+                    localStorage.setItem(BIOMETRIC_STORAGE_KEY, credentialIdBase64);
+                    const { error } = await supabaseClient.from('user_biometrics').insert([{ card_number: CARD_NUMBER, credential_id: credentialIdBase64 }]);
+                    if (error) console.error(error);
+                    showToast(langueActuelle === 'lo' ? "ເປີດໃຊ້ລາຍນິ້ວມືສຳເລັດ!" : "Fingerprint activated!", "success");
+                    btn.style.display = 'none'; document.getElementById('bioSection').classList.add('active');
+                }
+            } catch (err) { console.error(err); btn.innerHTML = '<i class="fas fa-fingerprint"></i> <span>Activer</span>'; showToast("Erreur.", "error"); }
+        }
+
+        async function loginBiometric() {
+            const bioBtn = document.getElementById('bioBtn');
+            const storedCredentialId = localStorage.getItem(BIOMETRIC_STORAGE_KEY);
+            if (!storedCredentialId) { showToast("Veuillez d'abord configurer l'empreinte.", "error"); return; }
+            try {
+                bioBtn.classList.add('scanning');
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                const rawIdBytes = Uint8Array.from(atob(storedCredentialId), c => c.charCodeAt(0));
+                const publicKeyCredentialRequestOptions = { challenge: challenge, allowCredentials: [{ id: rawIdBytes, type: 'public-key', transports: ['internal'] }], userVerification: "required", timeout: 60000 };
+                const assertion = await navigator.credentials.get({ publicKey: publicKeyCredentialRequestOptions });
+                if (assertion) {
+                    const { data, error } = await supabaseClient.from('user_biometrics').select('*').eq('card_number', CARD_NUMBER).eq('credential_id', storedCredentialId).single();
+                    if (error || !data) {
+                        bioBtn.classList.remove('scanning'); showToast("Empreinte révoquée.", "error"); localStorage.removeItem(BIOMETRIC_STORAGE_KEY); return;
+                    }
+                    bioBtn.classList.remove('scanning'); showPage('pageDashboard'); checkLinkedAccount();
+                }
+            } catch (err) { bioBtn.classList.remove('scanning'); showToast("Empreinte non reconnue.", "error"); }
+        }
+
+        function toggleCardBalance() {
+            isBalanceVisible = !isBalanceVisible;
+            const usdEl = document.getElementById('cardBalanceTop'); const lakEl = document.getElementById('cardBalanceLakTop'); const eye = document.getElementById('eyeIconTop');
+            if (isBalanceVisible) { usdEl.textContent = "3,010,000.00"; lakEl.textContent = "≈ 67,678,927,000 LAK"; eye.classList.replace('fa-eye-slash', 'fa-eye'); } 
+            else { usdEl.textContent = "••••••••"; lakEl.textContent = "≈ •••••••••• LAK"; eye.classList.replace('fa-eye', 'fa-eye-slash'); }
+        }
+        function toggleMainBalance() {
+            isBalanceVisible = !isBalanceVisible;
+            const mainBal = document.getElementById('mainBalance'); const mainLak = document.getElementById('mainBalanceLak'); const eye = document.querySelector('.balance-label i');
+            if (isBalanceVisible) { mainBal.textContent = "3,010,000.00 USD"; mainLak.textContent = "≈ 67,678,927,000 LAK"; eye.classList.replace('fa-eye-slash', 'fa-eye'); } 
+            else { mainBal.textContent = "•••••••• USD"; mainLak.textContent = "≈ •••••••••• LAK"; eye.classList.replace('fa-eye', 'fa-eye-slash'); }
+        }
+        function toggleCardNumber() {
+            const el = document.getElementById('cardNumberText'); const eye = document.getElementById('eyeIconNumber'); isCardNumberVisible = !isCardNumberVisible;
+            if (isCardNumberVisible) { el.textContent = "4822 5670 8715 3460"; eye.classList.replace('fa-eye-slash', 'fa-eye'); } 
+            else { el.textContent = "**** **** **** 3460"; eye.classList.replace('fa-eye', 'fa-eye-slash'); }
+        }
+        function copyCardNumber() {
+            navigator.clipboard.writeText(CARD_NUMBER).then(() => showToast("Copié!", 'success')).catch(() => showToast("Erreur.", 'error'));
+        }
+
+        changerLangue('lo');
+    </script>
+</body>
+</html>
